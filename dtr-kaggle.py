@@ -2,6 +2,7 @@
 import pandas as pd 
 from sklearn.tree import DecisionTreeRegressor 
 from sklearn.metrics import mean_absolute_error 
+from sklearn.model_selection import train_test_split
 
 # Path of the file to read 
 train_data=pd.read_csv('../input/home-data-for-ml-course/train.csv') 
@@ -32,18 +33,20 @@ X = filtered_train_data[feature_names]
 
 X.shape 
 
+train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
+
 # specify the model. #For model reproducibility, set a numeric value for random_state when specifying the model # 
 dtr_model = DecisionTreeRegressor(random_state=10)  
 
 # Fit the model 
-dtr_model.fit(X,y) 
+dtr_model.fit(train_X, train_y) 
 
 # make predictions 
-predictions = dtr_model.predict(X) 
+val_predictions = dtr_model.predict(val_X) 
 
-print(predictions) 
+print(val_predictions) 
 
-print(mean_absolute_error(y, predictions))
+print(mean_absolute_error(val_y, val_predictions))
 
 
 # read test data file using pandas 
