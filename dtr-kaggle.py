@@ -35,18 +35,21 @@ X.shape
 
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
 
-# specify the model. #For model reproducibility, set a numeric value for random_state when specifying the model # 
-dtr_model = DecisionTreeRegressor(random_state=10)  
+# a utility function to help compare 
+# MAE scores from different values for max_leaf_nodes:
 
-# Fit the model 
-dtr_model.fit(train_X, train_y) 
+def get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y):
+    dtr_model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+    dtr_model.fit(train_X, train_y)
+    val_predictions = dtr_model.predict(val_X)
+    mae = mean_absolute_error(val_y, val_predictions)
+    return(mae)
 
-# make predictions 
-val_predictions = dtr_model.predict(val_X) 
 
-print(val_predictions) 
 
-print(mean_absolute_error(val_y, val_predictions))
+for max_leaf_nodes in [5, 50, 500, 5000]:
+    my_mae = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
+    print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
 
 
 # read test data file using pandas 
